@@ -1,50 +1,76 @@
 # Radar / ISAR Classification Pipeline
 
-A planned reproducible signal- and image-processing project for preprocessing radar or ISAR representations, training transparent baselines, and evaluating classification performance and uncertainty.
+This repository defines a future radar and inverse synthetic-aperture radar classification study. It is currently a specification: no dataset adapter, preprocessing pipeline, trained classifier or measured result has been implemented.
 
-## Project goals
+The planned work focuses on reproducible signal/image-processing experiments rather than a single headline accuracy number.
 
-- Provide a documented dataset adapter with a synthetic fallback dataset
-- Implement normalisation, denoising, cropping, and augmentation steps
-- Establish classical and neural-network classification baselines
-- Report confusion matrices, per-class metrics, calibration, and uncertainty
-- Prevent data leakage with explicit train, validation, and test splits
-- Package tests and repeatable experiment configurations
+## Research question
 
-## Planned architecture
+How do transparent classical features and an optional neural baseline compare when radar or ISAR representations are processed through the same leakage-safe dataset and evaluation pipeline?
+
+## First executable release
+
+The first milestone should deliver:
+
+- a documented dataset interface and licence/provenance record;
+- a deterministic synthetic fallback dataset for tests and examples;
+- validation of image shape, labels, metadata and finite values;
+- normalization, cropping and denoising with visible before/after artifacts;
+- subject- or acquisition-aware train/validation/test splits where metadata permits;
+- one classical feature baseline;
+- confusion matrix, per-class precision/recall/F1 and calibration output;
+- repeatable configuration, tests and CI.
+
+A neural model belongs after the data contract and classical baseline are stable.
+
+## Planned data flow
 
 ```text
-Radar / ISAR data
-        |
-        v
-Validation and preprocessing
-        |
-        v
-Feature or image representation
-      /   \
-Classical  Neural baseline
-      \   /
-Evaluation, calibration, and reports
+radar / ISAR source + provenance
+              |
+              v
+       validation and split
+              |
+              v
+     preprocessing pipeline
+              |
+       +------+------+
+       |             |
+classical features   optional neural input
+       |             |
+       +------+------+
+              |
+              v
+ evaluation, calibration and error review
 ```
 
-## Planned technology
+## Intended technology
 
-- Python
-- NumPy and pandas
-- OpenCV or scikit-image
-- scikit-learn
-- PyTorch for the optional neural baseline
-- Matplotlib
-- pytest and GitHub Actions
+| Purpose | Planned tools |
+| --- | --- |
+| Data and numerics | Python, NumPy, pandas |
+| Image processing | OpenCV or scikit-image |
+| Classical baseline | scikit-learn |
+| Optional neural baseline | PyTorch |
+| Reporting | Matplotlib, JSON and CSV artifacts |
+| Quality checks | pytest, Ruff and GitHub Actions |
 
-## Intended evidence
+The final choices will be recorded when the first dataset is selected. Listing a library here does not mean it is already used.
 
-The finished repository will demonstrate reproducible experimentation, signal/image preprocessing, model evaluation, uncertainty awareness, software testing, and clear technical communication.
+## Milestones
 
-## Status
+1. Select a legally usable dataset and freeze the metadata contract.
+2. Build the adapter, validation layer and synthetic CI fixtures.
+3. Implement preprocessing with deterministic artifact checks.
+4. Establish a classical baseline and leakage-safe evaluation.
+5. Add calibration, uncertainty and difficult-example analysis.
+6. Add an optional neural baseline only when it answers a clear comparison question.
+7. Publish a reproducible experiment and a limitations section tied to the selected data.
 
-Project specification and milestone planning are in progress. Implementation will begin after the industrial, embedded, and ROS 2 portfolio projects have stable foundations.
+## Important scope distinction
 
-## Author
+ISAR image classification is not the same task as automotive radar point-cloud processing or camera–LiDAR–radar fusion. Automotive multimodal sensor work is developed separately in [Autonomous Sensor Fusion Lab](https://github.com/seneserisen/autonomous-sensor-fusion-lab).
 
-Sadik Enes Erisen — M.Sc. Autonomy Technologies, FAU Erlangen-Nürnberg; B.Sc. Electrical and Electronics Engineering.
+## Current status
+
+Specification and milestone planning only. [Issue #1](https://github.com/seneserisen/radar-isar-classification-pipeline/issues/1) defines the dataset-adapter and classical-baseline milestone.
